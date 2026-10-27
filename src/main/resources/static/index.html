@@ -1,0 +1,367 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #eef2ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 350px;
+            max-width: 85%;
+            box-shadow: 0 5px 20px #0002;
+        }
+
+        h2 {
+            text-align: center;
+            color: #4338ca;
+        }
+
+        input, textarea {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            margin: 8px 0 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+        }
+
+        textarea {
+            height: 100px;
+            resize: vertical;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background: #4338ca;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #312e81;
+        }
+
+        #result {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        /* Responsive layout */
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            padding: 15px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+        }
+
+        input, textarea, button {
+            max-width: 100%;
+        }
+
+        table {
+            width: 100%;
+            table-layout: fixed;
+            overflow-wrap: anywhere;
+        }
+
+        th, td {
+            padding: 8px;
+            font-size: 14px;
+            overflow-wrap: anywhere;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+                align-items: flex-start;
+            }
+
+            .container {
+                width: 100%;
+                max-width: 100%;
+                padding: 18px;
+            }
+
+            th, td {
+                padding: 5px;
+                font-size: 12px;
+            }
+
+            button {
+                margin-bottom: 8px;
+            }
+        }
+
+        /* Stack the form and contacts vertically */
+        body {
+            display: block;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 20px auto;
+        }
+
+        #contactForm {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #contactForm input,
+        #contactForm textarea,
+        #contactForm button {
+            width: 100%;
+        }
+
+        hr {
+            margin: 35px 0;
+        }
+
+        h2 {
+            text-align: center;
+        }
+
+        table {
+            width: 100%;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            overflow-wrap: anywhere;
+            word-break: break-word;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 18px;
+            }
+
+            th, td {
+                padding: 5px;
+                font-size: 12px;
+            }
+        }
+
+        /* Make buttons smaller and add spacing */
+        button {
+            width: auto;
+            padding: 10px 18px;
+            margin: 6px 8px 6px 0;
+            display: inline-block;
+            font-size: 14px;
+        }
+
+        #contactForm button {
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        /* Keep View Contacts and Refresh side by side */
+        #contactsTable {
+            width: 100%;
+        }
+
+        @media (max-width: 400px) {
+            button {
+                padding: 8px 12px;
+                font-size: 13px;
+            }
+        }
+
+        /* Center the entire page content */
+        .container {
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Center the saved contacts section */
+        body > h2,
+        body > button,
+        body > table {
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        body > button {
+            display: inline-block;
+        }
+
+        /* Center the View Contacts and Refresh buttons together */
+        body {
+            text-align: center;
+        }
+
+        .container {
+            text-align: left;
+        }
+
+        body > table {
+            text-align: left;
+        }
+
+        /* Restore full table width */
+        body > table {
+            width: 100%;
+            max-width: 100%;
+            margin: 15px 0;
+            display: table;
+            table-layout: fixed;
+            border-collapse: collapse;
+        }
+
+        /* Keep the buttons centered together */
+        body > button {
+            display: inline-block;
+            margin: 8px;
+        }
+
+        /* Keep table content readable */
+        body > table th,
+        body > table td {
+            padding: 10px;
+            text-align: left;
+            overflow-wrap: anywhere;
+        }
+
+    </style>
+</head>
+<body>
+<div class="container">
+    <h2>Contact Us</h2>
+
+    <form id="contactForm">
+        <label>Name</label>
+        <input type="text" id="name" required>
+
+        <label>Email</label>
+        <input type="email" id="email" required>
+
+        <label>Message</label>
+        <textarea id="message" required></textarea>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <p id="result"></p>
+</div>
+
+<script>
+    document.getElementById("contactForm").addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const contact = {
+            name: document.getElementById("name").value,
+            email: document.getElementById("email").value,
+            message: document.getElementById("message").value
+        };
+
+        try {
+            const response = await fetch("/api/contacts", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify(contact)
+            });
+
+            if (!response.ok) throw new Error("Failed");
+
+            document.getElementById("result").textContent = "Contact submitted successfully!";
+            this.reset();
+        } catch (error) {
+            document.getElementById("result").textContent = "Submission failed. Please try again.";
+        }
+    });
+</script>
+<hr>
+
+<h2>Saved Contacts</h2>
+
+<button onclick="loadContacts()">View Contacts</button>
+<button onclick="loadContacts()">Refresh</button>
+
+<table border="1" cellpadding="10" cellspacing="0"
+       style="width:100%; margin-top:15px; border-collapse:collapse;">
+    <thead>
+    <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Message</th>
+    </tr>
+    </thead>
+    <tbody id="contactsTable">
+    <tr>
+        <td colspan="3">Click View Contacts to load data.</td>
+    </tr>
+    </tbody>
+</table>
+
+<script>
+    async function loadContacts() {
+        const table = document.getElementById("contactsTable");
+
+        try {
+            const response = await fetch("/api/contacts");
+
+            if (!response.ok) {
+                throw new Error("Failed to load contacts");
+            }
+
+            const contacts = await response.json();
+            table.innerHTML = "";
+
+            if (contacts.length === 0) {
+                table.innerHTML =
+                    '<tr><td colspan="3">No contacts saved yet.</td></tr>';
+                return;
+            }
+
+            contacts.forEach(contact => {
+                const row = document.createElement("tr");
+
+                [contact.name, contact.email, contact.message].forEach(value => {
+                    const cell = document.createElement("td");
+                    cell.textContent = value || "";
+                    row.appendChild(cell);
+                });
+
+                table.appendChild(row);
+            });
+        } catch (error) {
+            table.innerHTML =
+                '<tr><td colspan="3">Could not load contacts.</td></tr>';
+        }
+    }
+</script>
+</body>
+</html>
